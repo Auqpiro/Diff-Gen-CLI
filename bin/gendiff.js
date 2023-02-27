@@ -8,11 +8,11 @@ program
   .name('gendiff')
   .description('Compares two configuration files and show a difference.')
   .version('0.0.3')
-  .option('-f, --format <type>', 'output format')
+  .option('-f, --format <type>', 'output format', 'stylish')
   .argument('<filepath1>')
   .argument('<filepath2>')
   .action((filepath1, filepath2) => {
-    const result = genDiff(filepath1, filepath2);
+    const result = genDiff(filepath1, filepath2, program.opts().format);
     console.log(result);
   });
 

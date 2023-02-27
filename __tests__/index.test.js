@@ -12,14 +12,13 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 const cases = [
   'json',
   'yaml',
-  // 'yml',
 ];
 
 test.each(cases)('test', (ext) => {
-  const pathFile1 = getFixturePath(`file1.${ext}`);
-  const pathFile2 = getFixturePath(`file2.${ext}`);
+  const pathFile1 = getFixturePath(`${ext}/file1.${ext}`);
+  const pathFile2 = getFixturePath(`${ext}/file2.${ext}`);
   const getDiff = genDiff(pathFile1, pathFile2);
-  const result = readFile(`expected_file.${ext}`)
+  const result = readFile(`${ext}/expected_file.${ext}`)
     .replaceAll('"', '')
     .replaceAll(',', '');
   expect(getDiff).toEqual(result);
