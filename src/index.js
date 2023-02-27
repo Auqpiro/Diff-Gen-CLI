@@ -3,14 +3,15 @@ import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
 import process from 'process';
+import parse from './parser.js';
 
 const genDiff = (filepath1, filepath2) => {
   const pathFile1 = path.resolve(process.cwd(), filepath1);
   const pathFile2 = path.resolve(process.cwd(), filepath2);
-  // const extNameFile1 = path.extname(pathFile1).slice(1);
-  // const extNameFile2 = path.extname(pathFile2).slice(1);
-  const obj1 = JSON.parse(fs.readFileSync(pathFile1), 'utf-8');
-  const obj2 = JSON.parse(fs.readFileSync(pathFile2), 'utf-8');
+
+  const obj1 = parse(fs.readFileSync(pathFile1), path.extname(pathFile1).slice(1));
+  const obj2 = parse(fs.readFileSync(pathFile2), path.extname(pathFile2).slice(1));
+
   const key1 = Object.keys(obj1);
   const key2 = Object.keys(obj2);
   const keys = _.union(key1, key2);
