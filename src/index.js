@@ -19,13 +19,13 @@ const genDiff = (filepath1, filepath2) => {
     .reduce((acc, key) => {
       let str = '';
       if (!Object.hasOwn(obj1, key)) {
-        str += `  + ${key}: ${_.get(obj2, key)}\n`;
+        str += `\t+ ${key}: ${_.get(obj2, key)}\n`;
       } else if (!Object.hasOwn(obj2, key)) {
-        str += `  - ${key}: ${_.get(obj1, key)}\n`;
+        str += `\t- ${key}: ${_.get(obj1, key)}\n`;
       } else if (_.get(obj1, key) !== _.get(obj2, key)) {
-        str += `  - ${key}: ${_.get(obj1, key)}\n  + ${key}: ${_.get(obj2, key)}\n`;
+        str += `\t- ${key}: ${_.get(obj1, key)}\n\t+ ${key}: ${_.get(obj2, key)}\n`;
       } else {
-        str += `    ${key}: ${_.get(obj1, key)}\n`;
+        str += `\t  ${key}: ${_.get(obj1, key)}\n`;
       }
       return acc + str;
     }, '{\n')}}`;

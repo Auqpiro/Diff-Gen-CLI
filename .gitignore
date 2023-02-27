@@ -1,5 +1,2 @@
 node_modules/
-__fixtures__/
-__tests__/
 coverage/
-.eslintrc.yml
