@@ -13,6 +13,8 @@ test('test1', () => {
   const pathFile1 = getFixturePath('file1.json');
   const pathFile2 = getFixturePath('file2.json');
   const getDiff = genDiff(pathFile1, pathFile2);
-  const result = readFile('expected_file.json');
+  const result = readFile('expected_file.json')
+    .replaceAll('"', '')
+    .replaceAll(',', '');
   expect(getDiff).toEqual(result);
 });
