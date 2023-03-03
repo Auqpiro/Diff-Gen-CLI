@@ -26,6 +26,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
