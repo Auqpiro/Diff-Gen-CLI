@@ -1,42 +1,50 @@
 #!/usr/bin/env node
 import _ from 'lodash';
 
-export default function stylish(data) {
-  const replacer = ' ';
-  const spacesCount = 4;
+const replacer = ' ';
+const spacesCount = 4;
 
-  const iter = (node, acc) => {
-    if (!_.isObject(node)) {
-      return `${node}`;
-    }
-    return `${Object
-      .entries(node)
-      .reduce((str, [key, value]) => {
-        const newStr = `${str}${replacer.repeat(acc * spacesCount)}${key}: ${iter(value, acc + 1)}\n`;
-        return newStr;
-      }, '{\n')}${replacer.repeat((acc - 1) * spacesCount)}}`;
-  };
-
-  const iterTree = (node, acc) => {
-    const result = `${node
-      .reduce((str, { name, status, value }) => {
-        switch (status) {
-          case 'added':
-            return `${str}${replacer.repeat(spacesCount * acc - 2)}+ ${name}: ${iter(value, acc + 1)}\n`;
-          case 'removed':
-            return `${str}${replacer.repeat(spacesCount * acc - 2)}- ${name}: ${iter(value, acc + 1)}\n`;
-          case 'exists':
-            return `${str}${replacer.repeat(spacesCount * acc)}${name}: ${iter(value, acc + 1)}\n`;
-          case 'updated':
-            return `${str}${replacer.repeat(spacesCount * acc - 2)}- ${name}: ${iter(value[0], acc + 1)}\n${replacer.repeat(spacesCount * acc - 2)}+ ${name}: ${iter(value[1], acc + 1)}\n`;
-          case 'nesting':
-            return `${str}${replacer.repeat(spacesCount * acc)}${name}: ${iterTree(value, acc + 1)}\n`;
-          default:
-            return `${status} - invalid type of status`;
-        }
-      }, '{\n')}${replacer.repeat(spacesCount * (acc - 1))}}`;
-    return result;
-  };
-
-  return iterTree(data, 1);
+// add function build row string
+function buildRowString(acc, depth, status, name, callback) {
+  const row = `${acc}${replacer.repeat(spacesCount * depth - 2)}${status} ${name}: ${callback}\n`;
+  return row;
 }
+
+function iter(node, depth) {
+  if (!_.isObject(node)) {
+    return `${node}`;
+  }
+  return `${Object
+    .entries(node)
+    .reduce((str, [name, value]) => {
+      const newStr = buildRowString(str, depth, ' ', name, iter(value, depth + 1));
+      return newStr;
+    }, '{\n')}${replacer.repeat((depth - 1) * spacesCount)}}`;
+}
+
+function buildStylishTree(node, depth = 1) {
+  const result = `${node
+    .reduce((str, { name, status, value }) => {
+      switch (status) {
+        case 'added':
+          return buildRowString(str, depth, '+', name, iter(value, depth + 1));
+        case 'removed':
+          return buildRowString(str, depth, '-', name, iter(value, depth + 1));
+        case 'unchanged':
+          return buildRowString(str, depth, ' ', name, iter(value, depth + 1));
+        case 'updated':
+          return `${buildRowString(str, depth, '-', name, iter(value[0], depth + 1))}${buildRowString('', depth, '+', name, iter(value[1], depth + 1))}`;
+        case 'children':
+          return buildRowString(str, depth, ' ', name, buildStylishTree(value, depth + 1));
+        default:
+          throw new Error(`${status} - invalid type of status`);
+      }
+    }, '{\n')}${replacer.repeat(spacesCount * (depth - 1))}}`;
+  return result;
+}
+
+function stylish(data) {
+  return buildStylishTree(data);
+}
+
+export default stylish;
