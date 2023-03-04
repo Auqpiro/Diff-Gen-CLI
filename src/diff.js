@@ -9,8 +9,6 @@ function getKeys(obj1, obj2) {
   return sortedKeys;
 }
 
-// add function build object ?? to mush return
-
 function getDiff(obj1, obj2) {
   const result = getKeys(obj1, obj2)
     .map((key) => {
