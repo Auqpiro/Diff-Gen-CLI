@@ -14,19 +14,19 @@ function getDiff(obj1, obj2) {
     .map((key) => {
       const node1 = _.cloneDeep(_.get(obj1, key));
       const node2 = _.cloneDeep(_.get(obj2, key));
-      const returnObj = {};
       if (!Object.hasOwn(obj1, key)) {
-        Object.assign(returnObj, { name: key, status: 'added', value: node2 });
-      } else if (!Object.hasOwn(obj2, key)) {
-        Object.assign(returnObj, { name: key, status: 'removed', value: node1 });
-      } else if (_.isObject(node1) && _.isObject(node2)) {
-        Object.assign(returnObj, { name: key, status: 'children', value: getDiff(node1, node2) });
-      } else if (node1 !== node2) {
-        Object.assign(returnObj, { name: key, status: 'updated', value: [node1, node2] });
-      } else {
-        Object.assign(returnObj, { name: key, status: 'unchanged', value: node1 });
+        return { name: key, status: 'added', value: node2 };
       }
-      return returnObj;
+      if (!Object.hasOwn(obj2, key)) {
+        return { name: key, status: 'removed', value: node1 };
+      }
+      if (_.isObject(node1) && _.isObject(node2)) {
+        return { name: key, status: 'children', value: getDiff(node1, node2) };
+      }
+      if (node1 !== node2) {
+        return { name: key, status: 'updated', value: [node1, node2] };
+      }
+      return { name: key, status: 'unchanged', value: node1 };
     });
   return result;
 }
