@@ -8,7 +8,9 @@ function parse(pathToFile) {
   switch (extension) {
     case 'json':
       return JSON.parse(fs.readFileSync(pathToFile), 'utf-8');
-    case ('yaml' || 'yml'):
+    case 'yml':
+      return yaml.load(fs.readFileSync(pathToFile), 'utf-8');
+    case 'yaml':
       return yaml.load(fs.readFileSync(pathToFile), 'utf-8');
     default:
       throw new Error(`${extension} - invalid type of extension`);

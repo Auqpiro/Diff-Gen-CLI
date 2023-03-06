@@ -10,7 +10,7 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
 describe('output as default', () => {
-  test.each(['json', 'yaml'])('type: %p', (ext) => {
+  test.each(['json', 'yml'])('type: %p', (ext) => {
     const pathFile1 = getFixturePath(`file1.${ext}`);
     const pathFile2 = getFixturePath(`file2.${ext}`);
     const getDiff = genDiff(pathFile1, pathFile2);
@@ -40,7 +40,7 @@ describe('basics testing', () => {
 describe('border conditions', () => {
   const cases = [
     ['txt', 'stylish'],
-    ['yaml', 'default'],
+    ['yml', 'default'],
   ];
   test.each(cases)('type: %p output format: %p', (ext, format) => {
     const pathFile1 = getFixturePath(`file1.${ext}`);
