@@ -16,6 +16,7 @@ function getValue(node) {
 
 function buildPlainTree(node, path = []) {
   const result = node
+    .filter(({ status }) => status !== 'unchanged')
     .reduce((str, { name, status, value }) => {
       const newPath = [...path, name];
       switch (status) {
@@ -27,8 +28,6 @@ function buildPlainTree(node, path = []) {
           return `${str}Property '${newPath.join('.')}' was updated. From ${getValue(value)[0]} to ${getValue(value)[1]}\n`;
         case 'children':
           return `${str}${buildPlainTree(value, newPath)}`;
-        case 'unchanged':
-          return `${str}`;
         default:
           throw new Error(`${status} - invalid type of status\n`);
       }

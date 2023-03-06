@@ -1,19 +1,16 @@
 #!/usr/bin/env node
 import yaml from 'js-yaml';
-import fs from 'fs';
-import path from 'path';
 
-function parse(pathToFile) {
-  const extension = path.extname(pathToFile).slice(1);
-  switch (extension) {
+function parse(data, ext) {
+  switch (ext) {
     case 'json':
-      return JSON.parse(fs.readFileSync(pathToFile), 'utf-8');
+      return JSON.parse(data, 'utf-8');
     case 'yml':
-      return yaml.load(fs.readFileSync(pathToFile), 'utf-8');
+      return yaml.load(data, 'utf-8');
     case 'yaml':
-      return yaml.load(fs.readFileSync(pathToFile), 'utf-8');
+      return yaml.load(data, 'utf-8');
     default:
-      throw new Error(`${extension} - invalid type of extension`);
+      throw new Error(`${ext} - invalid type of extension`);
   }
 }
 

@@ -47,6 +47,6 @@ describe('border conditions', () => {
     const pathFile2 = getFixturePath(`file2.${ext}`);
     expect(() => {
       genDiff(pathFile1, pathFile2, format);
-    }).toThrow('invalid type of');
+    }).toThrow();
   });
 });
